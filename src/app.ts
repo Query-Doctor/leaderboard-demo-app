@@ -11,6 +11,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 interface Score {
@@ -36,16 +37,16 @@ app.get("/player/:name", async (req: Request, res: Response) => {
 
   const stats = await pool.query(
     `
-        SELECT 
+        SELECT
             COUNT(*) AS games_played,
             MAX(score) AS high_score,
             ROUND(AVG(score))::int AS avg_score,
             MAX(timestamp) AS last_played
         FROM scores s
         JOIN users u ON u.id = s.user_id
-        WHERE u.name = $1       
+        WHERE u.name = $1
     `,
-    [name]
+    [name],
   );
 
   const recent = await pool.query(
@@ -57,13 +58,13 @@ app.get("/player/:name", async (req: Request, res: Response) => {
         ORDER BY s.timestamp DESC
         LIMIT 10
     `,
-    [name]
+    [name],
   );
 
   const leaderboardContext = await pool.query(
     `
         WITH ranked AS (
-            SELECT 
+            SELECT
             u.name,
             s.score,
             RANK() OVER (ORDER BY s.score DESC) AS rank
@@ -77,7 +78,7 @@ app.get("/player/:name", async (req: Request, res: Response) => {
         WHERE rank BETWEEN (SELECT rank FROM target) - 2 AND (SELECT rank FROM target) + 2
         ORDER BY rank;
     `,
-    [name]
+    [name],
   );
 
   res.render("player", {
@@ -112,12 +113,13 @@ async function findOrCreateUser(name: string): Promise<number> {
 
   const created = await pool.query(
     `INSERT INTO users (name) VALUES ($1) RETURNING id`,
-    [name]
+    [name],
   );
   return created.rows[0].id;
 }
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
+const PORT = process.env.PORT || 3123;
+app.listen(
+  PORT,
+  () => console.log(`Server running on http://localhost:${PORT}`),
 );

@@ -10,9 +10,9 @@
     <form action="/submit" method="POST">
       <input type="text" name="name" placeholder="Your name" required />
       <input type="hidden" id="score" name="score" />
-      <button type="button" onclick="playGame()">Play Game</button>
+      <button class="play-game" type="button" onclick="playGame()">Play Game</button>
       <span id="result"></span>
-      <button type="submit" disabled id="submitBtn">Submit Score</button>
+      <button class="submit-score" type="submit" disabled id="submitBtn">Submit Score</button>
     </form>
 
     <h2>🏆 Top Scores</h2>
@@ -20,7 +20,7 @@
       <% scores.forEach(score => { %>
       <li>
         <strong
-          ><a href="/player/<%= score.name %>"><%= score.name %></a></strong
+          ><a class="player-link" href="/player/<%= score.name %>"><%= score.name %></a></strong
         >
         — <%= score.score %> pts (<%= score.time %>)
       </li>
