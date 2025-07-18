@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= name %>'s Profile</title>
+  </head>
+  <body>
+    <h1>🎮 <%= name %>'s Profile</h1>
+    <ul>
+      <li>Total Games: <%= stats.games_played %></li>
+      <li>High Score: <%= stats.high_score %></li>
+      <li>Average Score: <%= stats.avg_score %></li>
+      <li>Last Played: <%= stats.last_played %></li>
+    </ul>
+
+    <h2>📜 Recent Scores</h2>
+    <ul>
+      <% recent.forEach(row => { %>
+      <li><%= row.score %> pts @ <%= row.time %></li>
+      <% }) %>
+    </ul>
+
+    <h2>📊 Your Global Rank</h2>
+    <ul>
+      <% leaderboardContext.forEach(entry => { %>
+      <li>
+        #<%= entry.rank %>
+        <strong style="text-decoration: underline"> <%= entry.name %> </strong>
+        — <%= entry.score %> pts
+      </li>
+      <% }) %>
+    </ul>
+
+    <a href="/">⬅ Back to Leaderboard</a>
+  </body>
+</html>

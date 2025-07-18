@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mini Game Leaderboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>🕹️ Mini Game Leaderboard</h1>
+
+    <form action="/submit" method="POST">
+      <input type="text" name="name" placeholder="Your name" required />
+      <input type="hidden" id="score" name="score" />
+      <button type="button" onclick="playGame()">Play Game</button>
+      <span id="result"></span>
+      <button type="submit" disabled id="submitBtn">Submit Score</button>
+    </form>
+
+    <h2>🏆 Top Scores</h2>
+    <ul>
+      <% scores.forEach(score => { %>
+      <li>
+        <strong
+          ><a href="/player/<%= score.name %>"><%= score.name %></a></strong
+        >
+        — <%= score.score %> pts (<%= score.time %>)
+      </li>
+
+      <% }) %>
+    </ul>
+
+    <script>
+      function playGame() {
+        const score = Math.floor(Math.random() * 1000);
+        document.getElementById("score").value = score;
+        document.getElementById(
+          "result"
+        ).textContent = `You scored ${score} points!`;
+        document.getElementById("submitBtn").disabled = false;
+      }
+    </script>
+  </body>
+</html>
